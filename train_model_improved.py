@@ -124,6 +124,28 @@ for target in target_cols:
     models[target] = model
 
 # ==================================================
+# PRE-NORMALIZATION DIAGNOSTIC (Reviewer 6 Response)
+# ==================================================
+
+ps = predictions_test['Solid phase']
+pl = predictions_test['Liquid phase']
+pg = predictions_test['Gas phase']
+raw_sums = ps + pl + pg
+devs = np.abs(raw_sums - 100)
+
+print("=" * 60)
+print("PRE-NORMALIZATION STATISTICS")
+print("=" * 60)
+print(f"n_test: {len(raw_sums)}")
+print(f"Raw sum -- mean: {raw_sums.mean():.2f}, std: {raw_sums.std():.2f}, min: {raw_sums.min():.2f}, max: {raw_sums.max():.2f}")
+print(f"|dev| -- mean: {devs.mean():.2f}, std: {devs.std():.2f}, median: {np.median(devs):.2f}, max: {devs.max():.2f}")
+print(f"Cases >0.5 wt%: {(devs>0.5).sum()} ({100*(devs>0.5).mean():.1f}%)")
+print(f"Cases >1.0 wt%: {(devs>1.0).sum()} ({100*(devs>1.0).mean():.1f}%)")
+print(f"Cases >2.0 wt%: {(devs>2.0).sum()} ({100*(devs>2.0).mean():.1f}%)")
+print(f"Cases >5.0 wt%: {(devs>5.0).sum()} ({100*(devs>5.0).mean():.1f}%)")
+print()
+
+# ==================================================
 # TEST TEMPERATURE TRENDS
 # ==================================================
 
@@ -210,3 +232,4 @@ print("Saved:")
 print("  - models_improved.pkl")
 print("  - scaler_improved.pkl")
 print("  - imputer_improved.pkl")
+print("  - feature_cols_improved.pkl")
